@@ -50,17 +50,17 @@ export const useIntersectionObserver = (
  */
 export const useLazyImage = (src: string, placeholder?: string) => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [isLoaded, setIsLoaded] = useRef(false);
-  const [currentSrc, setCurrentSrc] = useRef(placeholder || '');
+  const isLoadedRef = useRef(false);
+  const currentSrcRef = useRef(placeholder || '');
 
   const observerCallback = useCallback(() => {
-    if (!imgRef.current || isLoaded.current) return;
+    if (!imgRef.current || isLoadedRef.current) return;
 
     const img = new Image();
     img.src = src;
     img.onload = () => {
-      setCurrentSrc.current = src;
-      isLoaded.current = true;
+      currentSrcRef.current = src;
+      isLoadedRef.current = true;
       if (imgRef.current) {
         imgRef.current.src = src;
         imgRef.current.classList.add('loaded');
@@ -72,7 +72,7 @@ export const useLazyImage = (src: string, placeholder?: string) => {
     rootMargin: '200px'
   });
 
-  return { imgRef: elementRef, currentSrc: currentSrc.current, isLoaded: isLoaded.current };
+  return { imgRef: elementRef, currentSrc: currentSrcRef.current, isLoaded: isLoadedRef.current };
 };
 
 /**
@@ -123,11 +123,11 @@ export const generateSrcSet = (baseUrl: string, widths: number[]): string => {
  * Hook para debounce (optimizar búsquedas, etc)
  */
 export const useDebounce = <T>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = useRef<T>(value);
+  const debouncedValueRef = useRef<T>(value);
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue.current = value;
+      debouncedValueRef.current = value;
     }, delay);
 
     return () => {
@@ -135,7 +135,7 @@ export const useDebounce = <T>(value: T, delay: number): T => {
     };
   }, [value, delay]);
 
-  return debouncedValue.current;
+  return debouncedValueRef.current;
 };
 
 /**
@@ -253,8 +253,9 @@ export const measureWebVitals = () => {
   // FID - First Input Delay
   const fidObserver = new PerformanceObserver((list) => {
     const entries = list.getEntries();
-    entries.forEach(entry => {
-      console.log('FID:', entry.processingStart - entry.startTime);
+    entries.forEach((entry: any) => {
+      const processingStart = entry.processingStart || 0;
+      console.log('FID:', processingStart - entry.startTime);
     });
   });
   fidObserver.observe({ entryTypes: ['first-input'] });
