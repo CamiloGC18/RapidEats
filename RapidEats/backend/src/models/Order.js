@@ -117,6 +117,10 @@ const orderSchema = new mongoose.Schema(
     estimatedDeliveryTime: String,
     deliveredAt: Date,
     cancelReason: String,
+    review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
+    },
   },
   {
     timestamps: true,

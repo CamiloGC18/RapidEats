@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ShoppingCart, User, LogOut } from 'lucide-react'
+import { ShoppingCart, User, LogOut, Heart } from 'lucide-react'
 import { useAppSelector, useAppDispatch } from '../../hooks/redux'
 import { logout } from '../../store/slices/authSlice'
 
@@ -28,9 +28,15 @@ const Header = () => {
               Restaurantes
             </Link>
             {isAuthenticated && (
-              <Link to="/orders" className="hover:text-primary-green transition">
-                Mis Pedidos
-              </Link>
+              <>
+                <Link to="/orders" className="hover:text-primary-green transition">
+                  Mis Pedidos
+                </Link>
+                <Link to="/favorites" className="hover:text-primary-green transition flex items-center gap-1">
+                  <Heart className="w-4 h-4" />
+                  Favoritos
+                </Link>
+              </>
             )}
           </nav>
 

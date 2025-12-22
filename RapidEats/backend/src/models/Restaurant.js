@@ -75,7 +75,42 @@ const restaurantSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
+    ratings: {
+      average: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+      },
+      count: {
+        type: Number,
+        default: 0,
+      },
+      food: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+      },
+      delivery: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5,
+      },
+      distribution: {
+        5: { type: Number, default: 0 },
+        4: { type: Number, default: 0 },
+        3: { type: Number, default: 0 },
+        2: { type: Number, default: 0 },
+        1: { type: Number, default: 0 },
+      },
+    },
     totalOrders: {
+      type: Number,
+      default: 0,
+    },
+    favoriteCount: {
       type: Number,
       default: 0,
     },

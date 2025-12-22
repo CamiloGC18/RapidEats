@@ -4,6 +4,7 @@ const Coupon = require('../models/Coupon');
 const { generateOrderNumber, calculateDiscount } = require('../utils/helpers');
 const { notifyNewOrder } = require('./telegramService');
 const { sendOrderConfirmation } = require('./emailService');
+const { sendOrderStatusNotification } = require('./notificationService');
 
 const createOrder = async (orderData, userId) => {
   const {
@@ -99,6 +100,13 @@ const updateOrderStatus = async (orderId, newStatus, userId, io) => {
 
   if (newStatus === 'confirmed' && io) {
     await notifyNewOrder(order);
+  }
+
+  // Send push notification for status updates
+  if (['confirmed', 'preparing', 'on_the_way', 'delivered', 'cancelled'].includes(newStatus)) {
+    sendOrderStatusNotification(order.customerId._id, order, newStatus).catch(err => {
+      console.error('Error sending push notification:', err);
+    });
   }
 
   if (io) {

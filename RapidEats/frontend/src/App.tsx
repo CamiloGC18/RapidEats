@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from './hooks/redux'
 import { initializeAuth } from './store/slices/authSlice'
+import { useNotifications } from './hooks/useNotifications'
 
 import Layout from './components/layout/Layout'
 import Home from './pages/customer/Home'
@@ -11,6 +12,7 @@ import Checkout from './pages/customer/Checkout'
 import Orders from './pages/customer/Orders'
 import OrderTracking from './pages/customer/OrderTracking'
 import Profile from './pages/customer/Profile'
+import Favorites from './pages/customer/Favorites'
 import AuthCallback from './pages/auth/AuthCallback'
 import Login from './pages/auth/Login'
 
@@ -19,6 +21,9 @@ import ProtectedRoute from './components/common/ProtectedRoute'
 function App() {
   const dispatch = useAppDispatch()
   const { isAuthenticated, loading } = useAppSelector((state) => state.auth)
+  
+  // Initialize push notifications
+  useNotifications()
 
   useEffect(() => {
     dispatch(initializeAuth())
@@ -63,6 +68,14 @@ function App() {
           element={
             <ProtectedRoute>
               <OrderTracking />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute>
+              <Favorites />
             </ProtectedRoute>
           }
         />

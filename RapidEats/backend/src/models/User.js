@@ -51,6 +51,47 @@ const userSchema = new mongoose.Schema(
       type: Number,
       sparse: true,
     },
+    preferences: {
+      notifications: {
+        email: {
+          type: Boolean,
+          default: true,
+        },
+        push: {
+          type: Boolean,
+          default: true,
+        },
+        orderUpdates: {
+          type: Boolean,
+          default: true,
+        },
+        promotions: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      language: {
+        type: String,
+        default: 'es',
+        enum: ['es', 'en'],
+      },
+    },
+    pushTokens: [{
+      token: String,
+      device: String,
+      platform: {
+        type: String,
+        enum: ['web', 'android', 'ios'],
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    }],
+    lastOrder: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Order',
+    },
   },
   {
     timestamps: true,

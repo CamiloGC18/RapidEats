@@ -14,6 +14,10 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - ✅ Stripe payment integration
 - ✅ Live delivery tracking
 - ✅ Order status notifications
+- ✅ Reviews and ratings system
+- ✅ Favorites management
+- ✅ One-click reorder
+- ✅ Push notifications
 
 ### Restaurant Module
 - ✅ Dashboard with metrics and analytics
@@ -53,6 +57,7 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - **node-telegram-bot-api** - Telegram integration
 - **Nodemailer** - Email notifications
 - **Cloudinary** - Image storage
+- **Firebase Admin SDK** - Push notifications
 
 ### Frontend
 - **React 18** + **TypeScript** - UI framework
@@ -66,6 +71,7 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - **Framer Motion** - Animations
 - **Lucide React** - Icons
 - **React Toastify** - Notifications
+- **Firebase SDK** - Push notifications (optional)
 
 ## 📦 Installation
 
@@ -198,7 +204,57 @@ socket.on('orderStatusUpdate', (data) => {
    TELEGRAM_GROUP_CHAT_ID=-1001234567890
    ```
 
-## 📁 Project Structure
+## � Firebase Push Notifications Setup (Optional)
+
+Push notifications are optional. The app will work perfectly without them, but they enhance the user experience.
+
+### Backend Setup
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project or use existing
+3. Go to Project Settings → Service Accounts
+4. Click "Generate New Private Key" and download the JSON file
+5. Add credentials to backend `.env`:
+   ```
+   FIREBASE_PROJECT_ID=your-project-id
+   FIREBASE_PRIVATE_KEY_ID=your-private-key-id
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+   FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com
+   FIREBASE_CLIENT_ID=your-client-id
+   FIREBASE_CERT_URL=https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-xxxxx%40your-project.iam.gserviceaccount.com
+   ```
+
+### Frontend Setup
+
+1. In Firebase Console, go to Project Settings → General
+2. Under "Your apps", click the web icon (</>)
+3. Register your app and copy the configuration
+4. Add to frontend `.env`:
+   ```
+   VITE_FIREBASE_API_KEY=your-api-key
+   VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+   VITE_FIREBASE_PROJECT_ID=your-project-id
+   VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+   VITE_FIREBASE_APP_ID=your-app-id
+   VITE_FIREBASE_VAPID_KEY=your-vapid-key
+   ```
+5. Go to Project Settings → Cloud Messaging
+6. Under "Web Push certificates", generate a new key pair (VAPID)
+7. Copy the VAPID key to `VITE_FIREBASE_VAPID_KEY`
+
+### Testing Push Notifications
+
+1. Allow notifications in your browser when prompted
+2. User will receive notifications for:
+   - Order confirmations
+   - Status updates (preparing, on the way, delivered)
+   - Review reminders
+   - Promotional offers (if enabled in preferences)
+
+**Note:** If Firebase is not configured, the app will log a warning and continue working normally without push notifications.
+
+## �📁 Project Structure
 
 ```
 RapidEats/
@@ -295,6 +351,39 @@ RapidEats/
 - `PATCH /api/admin/users/:id/status` - Toggle user status
 - `PATCH /api/admin/users/:id/role` - Change user role
 
+### Reviews (NEW - Phase 3)
+- `POST /api/reviews` - Create review
+- `GET /api/reviews/restaurant/:restaurantId` - Get restaurant reviews
+- `GET /api/reviews/restaurant/:restaurantId/stats` - Review statistics
+- `GET /api/reviews/user` - Get user's reviews
+- `PUT /api/reviews/:id` - Update review
+- `DELETE /api/reviews/:id` - Delete review
+- `POST /api/reviews/:id/helpful` - Mark review as helpful
+- `POST /api/reviews/:id/respond` - Restaurant responds to review
+- `GET /api/reviews/can-review/:orderId` - Check if can review order
+
+### Favorites (NEW - Phase 3)
+- `GET /api/favorites` - Get user's favorites
+- `GET /api/favorites/stats` - Favorites statistics
+- `GET /api/favorites/check/:restaurantId` - Check if restaurant is favorited
+- `POST /api/favorites` - Add to favorites
+- `PATCH /api/favorites/:restaurantId` - Update favorite notes
+- `DELETE /api/favorites/:restaurantId` - Remove from favorites
+
+### Notifications (NEW - Phase 3)
+- `POST /api/notifications/token` - Register push token
+- `DELETE /api/notifications/token` - Unregister push token
+- `GET /api/notifications/preferences` - Get notification preferences
+- `PATCH /api/notifications/preferences` - Update notification preferences
+- `POST /api/notifications/test` - Send test notification (dev only)
+
+### Orders (Updated - Phase 3)
+- `POST /api/orders` - Create order
+- `GET /api/orders` - User's orders
+- `GET /api/orders/:id` - Order details
+- `GET /api/orders/:id/tracking` - Order tracking info
+- `POST /api/orders/:orderId/reorder` - Reorder from past order
+
 ### Coupons
 - `POST /api/coupons/validate` - Validate coupon code
 
@@ -375,10 +464,10 @@ PORT=5001
 - ✅ Restaurant dashboard implementation (metrics, menu management)
 - ✅ Admin panel implementation (user management, analytics)
 
-### Phase 3 - Future Enhancements
-- [ ] Reviews and ratings system
-- [ ] Favorites and reorder
-- [ ] Push notifications
+### Phase 3 - Future Enhancements ✅
+- ✅ Reviews and ratings system
+- ✅ Favorites and reorder
+- ✅ Push notifications (Firebase Cloud Messaging)
 - [ ] Mobile app (React Native)
 
 ## 🤝 Contributing
@@ -399,7 +488,7 @@ MIT License - feel free to use this project for learning or commercial purposes.
 ✅ **Zone Management** - Dynamic delivery costs  
 ✅ **Basic Order Flow** - Create and view orders  
 
-### Phase 2 - Advanced Features (NEW)
+### Phase 2 - Advanced Features
 ✅ **Stripe Payment Integration** - Secure payment processing  
 ✅ **Real-time Order Tracking** - Socket.io live updates  
 ✅ **Delivery Location Tracking** - Live driver location updates  
@@ -410,6 +499,35 @@ MIT License - feel free to use this project for learning or commercial purposes.
 ✅ **Revenue Analytics** - Charts and statistics  
 ✅ **Order Status Notifications** - Real-time status updates  
 ✅ **Payment Refunds** - Automated refund processing  
+
+### Phase 3 - Enhanced User Experience (NEW)
+✅ **Reviews and Ratings System** - Complete review functionality  
+  - Star ratings (overall, food quality, delivery service)
+  - Written reviews with images
+  - Restaurant responses to reviews
+  - Helpful votes on reviews
+  - Review statistics and distribution
+  - Verified purchase badges
+
+✅ **Favorites System** - Save favorite restaurants  
+  - Add/remove restaurants from favorites
+  - Personal notes for each favorite
+  - Quick access to favorite restaurants
+  - Favorites statistics by category
+
+✅ **Reorder Functionality** - One-click reordering  
+  - Reorder from past orders
+  - Automatic product availability check
+  - Price update notification
+  - Smart cart management
+
+✅ **Push Notifications** - Real-time alerts  
+  - Firebase Cloud Messaging integration
+  - Order status updates
+  - Delivery tracking notifications
+  - Promotional notifications
+  - Review reminders
+  - Customizable notification preferences
 
 ### Additional Features
 ✅ **Telegram Bot** - Delivery notifications  

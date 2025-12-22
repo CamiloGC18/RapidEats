@@ -3,6 +3,8 @@ import authReducer from './slices/authSlice'
 import cartReducer from './slices/cartSlice'
 import restaurantReducer from './slices/restaurantSlice'
 import orderReducer from './slices/orderSlice'
+import reviewReducer from './slices/reviewSlice'
+import favoriteReducer from './slices/favoriteSlice'
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     cart: cartReducer,
     restaurant: restaurantReducer,
     order: orderReducer,
+    review: reviewReducer,
+    favorite: favoriteReducer,
   },
 })
 

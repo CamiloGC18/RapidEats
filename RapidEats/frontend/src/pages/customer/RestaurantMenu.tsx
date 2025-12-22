@@ -3,22 +3,77 @@ import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { fetchRestaurantBySlug } from '../../store/slices/restaurantSlice'
 import { addToCart } from '../../store/slices/cartSlice'
-import { Star, Clock, MapPin, Plus } from 'lucide-react'
+import { addFavorite, removeFavorite, checkFavorite } from '../../store/slices/favoriteSlice'
+import { fetchRestaurantReviews, markReviewHelpful } from '../../store/slices/reviewSlice'
+import { Star, Clock, MapPin, Plus, Heart } from 'lucide-react'
 import { toast } from 'react-toastify'
+import ReviewCard from '../../components/common/ReviewCard'
+import StarRating from '../../components/common/StarRating'
 
 const RestaurantMenu = () => {
   const { slug } = useParams<{ slug: string }>()
   const dispatch = useAppDispatch()
   const { currentRestaurant, products, loading } = useAppSelector((state) => state.restaurant)
+  const { reviews, stats } = useAppSelector((state) => state.review)
+  const { user } = useAppSelector((state) => state.auth)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [selectedToppings, setSelectedToppings] = useState<any[]>([])
   const [quantity, setQuantity] = useState(1)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [showReviews, setShowReviews] = useState(false)
 
   useEffect(() => {
     if (slug) {
       dispatch(fetchRestaurantBySlug(slug))
     }
   }, [dispatch, slug])
+
+  useEffect(() => {
+    if (currentRestaurant && user) {
+      dispatch(checkFavorite(currentRestaurant._id)).then((result: any) => {
+        if (result.payload) {
+          setIsFavorite(result.payload.isFavorite)
+        }
+      })
+    }
+  }, [currentRestaurant, user, dispatch])
+
+  useEffect(() => {
+    if (currentRestaurant && showReviews) {
+      dispatch(fetchRestaurantReviews({ restaurantId: currentRestaurant._id, page: 1, limit: 10 }))
+    }
+  }, [currentRestaurant, showReviews, dispatch])
+
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      toast.info('Inicia sesión para agregar favoritos')
+      return
+    }
+
+    if (!currentRestaurant) return
+
+    try {
+      if (isFavorite) {
+        await dispatch(removeFavorite(currentRestaurant._id)).unwrap()
+        toast.success('Eliminado de favoritos')
+        setIsFavorite(false)
+      } else {
+        await dispatch(addFavorite({ restaurantId: currentRestaurant._id })).unwrap()
+        toast.success('Agregado a favoritos')
+        setIsFavorite(true)
+      }
+    } catch (error: any) {
+      toast.error(error || 'Error al actualizar favoritos')
+    }
+  }
+
+  const handleMarkHelpful = (reviewId: string) => {
+    if (!user) {
+      toast.info('Inicia sesión para calificar reseñas')
+      return
+    }
+    dispatch(markReviewHelpful(reviewId))
+  }
 
   const groupedProducts = products.reduce((acc: any, product) => {
     if (!acc[product.category]) {
@@ -72,35 +127,111 @@ const RestaurantMenu = () => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="container mx-auto px-4 h-full flex items-end pb-8 relative z-10">
-          <div className="flex items-center text-white">
-            <img
-              src={currentRestaurant.logo}
-              alt={currentRestaurant.name}
-              className="w-24 h-24 rounded-full object-cover border-4 border-white mr-6"
-            />
-            <div>
-              <h1 className="text-4xl font-bold mb-2">{currentRestaurant.name}</h1>
-              <p className="text-lg mb-2">{currentRestaurant.description}</p>
-              <div className="flex items-center space-x-4 text-sm">
-                <div className="flex items-center">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                  <span>{currentRestaurant.rating}</span>
-                </div>
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
-                  <span>{currentRestaurant.estimatedDeliveryTime}</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  <span>{currentRestaurant.zone}</span>
+          <div className="flex items-center justify-between w-full text-white">
+            <div className="flex items-center">
+              <img
+                src={currentRestaurant.logo}
+                alt={currentRestaurant.name}
+                className="w-24 h-24 rounded-full object-cover border-4 border-white mr-6"
+              />
+              <div>
+                <h1 className="text-4xl font-bold mb-2">{currentRestaurant.name}</h1>
+                <p className="text-lg mb-2">{currentRestaurant.description}</p>
+                <div className="flex items-center space-x-4 text-sm">
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                    <span>{currentRestaurant.rating}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-1" />
+                    <span>{currentRestaurant.estimatedDeliveryTime}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <MapPin className="w-4 h-4 mr-1" />
+                    <span>{currentRestaurant.zone}</span>
+                  </div>
                 </div>
               </div>
             </div>
+            {user && (
+              <button
+                onClick={handleToggleFavorite}
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 p-3 rounded-full transition"
+                title={isFavorite ? 'Eliminar de favoritos' : 'Agregar a favoritos'}
+              >
+                <Heart
+                  className={`w-6 h-6 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white'}`}
+                />
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Reviews Section */}
+        {stats && stats.count > 0 && (
+          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">Reseñas</h2>
+              <button
+                onClick={() => setShowReviews(!showReviews)}
+                className="text-green-600 hover:text-green-700 font-medium"
+              >
+                {showReviews ? 'Ocultar' : `Ver todas (${stats.count})`}
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-5xl font-bold">{stats.average.toFixed(1)}</div>
+                  <div>
+                    <StarRating rating={stats.average} readonly size="md" />
+                    <p className="text-sm text-gray-600 mt-1">
+                      {stats.count} {stats.count === 1 ? 'reseña' : 'reseñas'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {[5, 4, 3, 2, 1].map((rating) => {
+                  const count = stats.distribution[rating] || 0
+                  const percentage = stats.count > 0 ? (count / stats.count) * 100 : 0
+                  return (
+                    <div key={rating} className="flex items-center gap-2">
+                      <span className="text-sm w-3">{rating}</span>
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <div className="flex-1 bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-yellow-400 h-2 rounded-full"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                      <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {showReviews && reviews.length > 0 && (
+              <div className="border-t pt-6">
+                {reviews.map((review) => (
+                  <ReviewCard
+                    key={review._id}
+                    review={review}
+                    onHelpful={handleMarkHelpful}
+                    currentUserId={user?._id}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Products Section */}
         {Object.entries(groupedProducts).map(([category, items]: [string, any]) => (
           <div key={category} className="mb-12">
             <h2 className="text-2xl font-bold mb-6">{category}</h2>

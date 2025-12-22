@@ -12,6 +12,7 @@ const connectDB = require('./config/database');
 const passport = require('./config/oauth');
 const { initTelegramBot } = require('./config/telegram');
 const { initEmailService } = require('./services/emailService');
+const { initFirebase } = require('./services/notificationService');
 const { setupTelegramHandlers } = require('./services/telegramService');
 const setupOrderSocket = require('./sockets/orderSocket');
 const errorHandler = require('./middlewares/errorHandler');
@@ -21,6 +22,9 @@ const restaurantRoutes = require('./routes/restaurantRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const couponRoutes = require('./routes/couponRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 const app = express();
 const httpServer = createServer(app);
@@ -34,6 +38,7 @@ const io = new Server(httpServer, {
 connectDB();
 initTelegramBot();
 initEmailService();
+initFirebase();
 
 app.use(helmet());
 app.use(compression());
@@ -59,6 +64,10 @@ app.get('/', (req, res) => {
       restaurants: '/api/restaurants',
       orders: '/api/orders',
       coupons: '/api/coupons',
+      payments: '/api/payments',
+      reviews: '/api/reviews',
+      favorites: '/api/favorites',
+      notifications: '/api/notifications',
     },
   });
 });
@@ -68,6 +77,9 @@ app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/coupons', couponRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/favorites', favoriteRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
