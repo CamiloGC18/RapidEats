@@ -1,5 +1,7 @@
 node_modules/
 .env
+.env.local
+.env.production
 .DS_Store
 *.log
 uploads/
@@ -8,3 +10,24 @@ build/
 coverage/
 .vscode/
 .idea/
+
+# Logs
+logs/*.log
+logs/error.log
+logs/combined.log
+
+# Redis dump
+dump.rdb
+
+# PDF temp files
+*.pdf
+temp/
+
+# Test files
+*.test.js
+__tests__/
+
+# Cache
+.cache/
+.temp/
+

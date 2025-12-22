@@ -8,6 +8,8 @@ const {
   updateProfile,
 } = require('../controllers/authController');
 const { verifyToken } = require('../middlewares/auth');
+const { authLimiter } = require('../middlewares/rateLimiter');
+const { validate, schemas } = require('../utils/validation');
 
 const router = express.Router();
 
@@ -25,9 +27,9 @@ router.get(
   googleCallback
 );
 
-router.post('/refresh', refreshAccessToken);
-router.post('/logout', logout);
+router.post('/refresh', authLimiter, refreshAccessToken);
+router.post('/logout', verifyToken, logout);
 router.get('/profile', verifyToken, getProfile);
-router.put('/profile', verifyToken, updateProfile);
+router.put('/profile', verifyToken, validate(schemas.updateProfile), updateProfile);
 
 module.exports = router;

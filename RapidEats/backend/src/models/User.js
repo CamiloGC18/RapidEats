@@ -98,8 +98,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.index({ email: 1 });
-userSchema.index({ googleId: 1 });
-userSchema.index({ role: 1 });
+);
+
+// Índices optimizados
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ googleId: 1 }, { sparse: true, unique: true });
+userSchema.index({ role: 1, isActive: 1 });
+userSchema.index({ telegramUserId: 1 }, { sparse: true });
+userSchema.index({ 'pushTokens.token': 1 }, { sparse: true });
+userSchema.index({ createdAt: -1 }); // Usuarios recientes
+userSchema.index({ name: 'text', email: 'text' }); // Búsqueda de usuarios
 
 module.exports = mongoose.model('User', userSchema);

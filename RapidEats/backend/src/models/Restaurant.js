@@ -127,8 +127,24 @@ const restaurantSchema = new mongoose.Schema(
   }
 );
 
-restaurantSchema.index({ slug: 1 });
-restaurantSchema.index({ category: 1 });
+);
+
+// Índices optimizados para búsqueda y queries frecuentes
+restaurantSchema.index({ slug: 1 }, { unique: true });
+restaurantSchema.index({ category: 1, isActive: 1 });
 restaurantSchema.index({ isActive: 1, isFeatured: 1 });
+restaurantSchema.index({ ownerId: 1 });
+restaurantSchema.index({ 'ratings.average': -1 }); // Para ordenar por rating
+restaurantSchema.index({ totalOrders: -1 }); // Para ordenar por popularidad
+restaurantSchema.index({ name: 'text', description: 'text' }); // Full-text search
+restaurantSchema.index({ createdAt: -1 }); // Para ordenar por recientes
+restaurantSchema.index({ zone: 1, isActive: 1 }); // Búsqueda por zona
+
+// Índice compuesto para queries comunes
+restaurantSchema.index({ 
+  isActive: 1, 
+  category: 1, 
+  'ratings.average': -1 
+});
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

@@ -127,10 +127,32 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.index({ orderNumber: 1 });
-orderSchema.index({ customerId: 1, createdAt: -1 });
-orderSchema.index({ restaurantId: 1, status: 1 });
-orderSchema.index({ deliveryId: 1 });
-orderSchema.index({ status: 1, createdAt: -1 });
+);
+
+// Índices optimizados para queries frecuentes
+orderSchema.index({ orderNumber: 1 }, { unique: true });
+orderSchema.index({ customerId: 1, createdAt: -1 }); // Historial del usuario
+orderSchema.index({ restaurantId: 1, status: 1, createdAt: -1 }); // Órdenes por restaurante
+orderSchema.index({ deliveryId: 1, status: 1 }); // Órdenes del repartidor
+orderSchema.index({ status: 1, createdAt: -1 }); // Todas las órdenes por status
+orderSchema.index({ createdAt: -1 }); // Órdenes recientes
+orderSchema.index({ deliveredAt: -1 }); // Órdenes entregadas
+
+// Índice compuesto para analytics
+orderSchema.index({
+  restaurantId: 1,
+  status: 1,
+  createdAt: -1
+});
+
+// Índice para búsqueda de órdenes activas
+orderSchema.index({
+  status: 1,
+  restaurantId: 1
+}, {
+  partialFilterExpression: {
+    status: { $in: ['pending_confirmation', 'confirmed', 'preparing', 'on_the_way'] }
+  }
+});
 
 module.exports = mongoose.model('Order', orderSchema);

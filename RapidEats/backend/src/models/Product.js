@@ -61,7 +61,14 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-productSchema.index({ restaurantId: 1, isActive: 1 });
-productSchema.index({ category: 1 });
+);
+
+// Índices optimizados para queries frecuentes
+productSchema.index({ restaurantId: 1, isActive: 1, category: 1 }); // Listar productos
+productSchema.index({ restaurantId: 1, order: 1 }); // Ordenar productos
+productSchema.index({ category: 1, isActive: 1 });
+productSchema.index({ price: 1 }); // Filtrar por precio
+productSchema.index({ name: 'text', description: 'text' }); // Búsqueda full-text
+productSchema.index({ createdAt: -1 }); // Productos nuevos
 
 module.exports = mongoose.model('Product', productSchema);
