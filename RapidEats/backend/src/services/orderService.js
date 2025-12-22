@@ -102,6 +102,20 @@ const updateOrderStatus = async (orderId, newStatus, userId, io) => {
     await notifyNewOrder(order);
   }
 
+  // Agregar puntos de lealtad cuando se entrega la orden
+  if (newStatus === 'delivered') {
+    try {
+      const loyaltyService = require('./loyaltyService');
+      await loyaltyService.addPointsForOrder(order.customerId._id, order);
+      
+      // Procesar recompensa de referido si es la primera orden
+      const referralService = require('./referralService');
+      await referralService.processReferralReward(order.customerId._id, order._id);
+    } catch (error) {
+      console.error('Error adding loyalty points:', error);
+    }
+  }
+
   // Send push notification for status updates
   if (['confirmed', 'preparing', 'on_the_way', 'delivered', 'cancelled'].includes(newStatus)) {
     sendOrderStatusNotification(order.customerId._id, order, newStatus).catch(err => {

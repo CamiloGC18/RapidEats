@@ -30,6 +30,11 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const recommendationRoutes = require('./routes/recommendationRoutes');
+const loyaltyRoutes = require('./routes/loyaltyRoutes');
+const referralRoutes = require('./routes/referralRoutes');
+const supportRoutes = require('./routes/supportRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
 
 const app = express();
 const httpServer = createServer(app);
@@ -162,6 +167,11 @@ app.get('/', (req, res) => {
       reviews: '/api/reviews',
       favorites: '/api/favorites',
       notifications: '/api/notifications',
+      recommendations: '/api/recommendations',
+      loyalty: '/api/loyalty',
+      referrals: '/api/referrals',
+      support: '/api/support',
+      analytics: '/api/analytics',
     },
     features: {
       rateLimit: 'enabled',
@@ -182,6 +192,11 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/loyalty', loyaltyRoutes);
+app.use('/api/referrals', referralRoutes);
+app.use('/api/support', supportRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // ===== ERROR HANDLING =====
 // 404 handler

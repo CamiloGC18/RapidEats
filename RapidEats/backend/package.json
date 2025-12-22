@@ -7,6 +7,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "seed": "node scripts/seedDatabase.js",
+    "seed:phase3": "node scripts/seedPhase3.js",
     "test": "jest --watchAll",
     "lint": "eslint src/"
   },
