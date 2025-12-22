@@ -11,6 +11,9 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - ✅ Shopping cart with coupon system
 - ✅ Real-time order tracking
 - ✅ Order history
+- ✅ Stripe payment integration
+- ✅ Live delivery tracking
+- ✅ Order status notifications
 
 ### Restaurant Module
 - ✅ Dashboard with metrics and analytics
@@ -18,6 +21,9 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - ✅ Real-time order notifications
 - ✅ Order status management
 - ✅ Profile and schedule configuration
+- ✅ Revenue tracking and statistics
+- ✅ Product availability toggle
+- ✅ Order filtering and search
 
 ### Admin Module
 - ✅ Global platform statistics
@@ -26,6 +32,9 @@ RapidEats is a full-stack delivery platform built with the MERN stack, featuring
 - ✅ Coupon system
 - ✅ Zone management with delivery costs
 - ✅ Comprehensive reports
+- ✅ Real-time analytics dashboard
+- ✅ User role management
+- ✅ Revenue and order charts
 
 ### Delivery System (Telegram Bot)
 - ✅ Automatic notifications to delivery group
@@ -131,6 +140,50 @@ The frontend will run on `http://localhost:3000`
 5. Add authorized redirect URI: `http://localhost:5000/api/auth/google/callback`
 6. Copy Client ID and Client Secret to `.env` files
 
+## 💳 Stripe Payment Setup
+
+1. Go to [Stripe Dashboard](https://dashboard.stripe.com/)
+2. Create a new account or login
+3. Get your API keys from the Developers section
+4. Add to backend `.env`:
+   ```
+   STRIPE_SECRET_KEY=sk_test_your_key
+   STRIPE_PUBLISHABLE_KEY=pk_test_your_key
+   STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+   ```
+5. Set up webhook endpoint: `http://localhost:5000/api/payments/webhook`
+6. Subscribe to events: `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`
+
+## 🔌 Real-time Features (Socket.io)
+
+### Available Events
+
+**Customer Events:**
+- `orderStatusUpdate` - Receive order status changes
+- `deliveryLocationUpdate` - Track delivery driver location
+- `newMessage` - Chat messages from support
+
+**Restaurant Events:**
+- `newOrder` - Notification when new order arrives
+- `orderUpdate` - Order status changes
+
+**Admin Events:**
+- `newOrder` - Platform-wide new orders
+- `userJoined` - User activity tracking
+
+### Connection Example:
+```javascript
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5000');
+socket.emit('authenticate', token);
+socket.emit('joinOrder', orderId);
+
+socket.on('orderStatusUpdate', (data) => {
+  console.log('Order status:', data);
+});
+```
+
 ## 🤖 Telegram Bot Setup (Optional)
 
 1. Talk to [@BotFather](https://t.me/botfather) on Telegram
@@ -156,8 +209,8 @@ RapidEats/
 │   │   ├── controllers/     # Business logic
 │   │   ├── routes/          # API routes
 │   │   ├── middlewares/     # Auth, validation, error handling
-│   │   ├── services/        # Telegram, email, order services
-│   │   ├── sockets/         # Socket.io handlers
+│   │   ├── services/        # Telegram, email, order, payment services
+│   │   ├── sockets/         # Socket.io handlers (enhanced)
 │   │   ├── utils/           # Helper functions
 │   │   └── server.js        # Entry point
 │   ├── scripts/
@@ -173,8 +226,8 @@ RapidEats/
     │   ├── pages/           # Page components
     │   │   ├── auth/
     │   │   ├── customer/
-    │   │   ├── restaurant/  # To be implemented
-    │   │   └── admin/       # To be implemented
+    │   │   ├── restaurant/  # ✅ NEW: Restaurant dashboard pages
+    │   │   └── admin/       # ✅ NEW: Admin panel pages
     │   ├── store/           # Redux store
     │   │   └── slices/
     │   ├── hooks/           # Custom hooks
@@ -220,6 +273,27 @@ RapidEats/
 - `GET /api/orders` - User's orders
 - `GET /api/orders/:id` - Order details
 - `GET /api/orders/:id/tracking` - Order tracking info
+
+### Payments (NEW - Phase 2)
+- `POST /api/payments/create-intent` - Create payment intent
+- `POST /api/payments/confirm` - Confirm payment completion
+- `POST /api/payments/refund` - Process refund
+- `POST /api/payments/webhook` - Stripe webhook handler
+
+### Restaurant Dashboard (NEW - Phase 2)
+- `GET /api/restaurant/stats` - Restaurant statistics
+- `GET /api/restaurant/orders/recent` - Recent orders
+- `GET /api/restaurant/menu` - Get menu items
+- `PATCH /api/restaurant/menu/:id` - Update menu item
+- `DELETE /api/restaurant/menu/:id` - Delete menu item
+
+### Admin Panel (NEW - Phase 2)
+- `GET /api/admin/stats` - Platform statistics
+- `GET /api/admin/revenue-chart` - Revenue chart data
+- `GET /api/admin/orders-chart` - Orders chart data
+- `GET /api/admin/users` - List all users
+- `PATCH /api/admin/users/:id/status` - Toggle user status
+- `PATCH /api/admin/users/:id/role` - Change user role
 
 ### Coupons
 - `POST /api/coupons/validate` - Validate coupon code
@@ -289,19 +363,19 @@ PORT=5001
 
 ## 📚 Next Steps
 
-### Phase 1 - Core Features (Current)
+### Phase 1 - Core Features ✅
 - ✅ Authentication system
 - ✅ Restaurant browsing
 - ✅ Menu and cart
 - ✅ Basic order flow
 
-### Phase 2 - Advanced Features
-- [ ] Complete checkout with payment integration
-- [ ] Full order tracking with Socket.io
-- [ ] Restaurant dashboard implementation
-- [ ] Admin panel implementation
+### Phase 2 - Advanced Features ✅
+- ✅ Complete checkout with Stripe payment integration
+- ✅ Full order tracking with Socket.io (real-time updates)
+- ✅ Restaurant dashboard implementation (metrics, menu management)
+- ✅ Admin panel implementation (user management, analytics)
 
-### Phase 3 - Enhancements
+### Phase 3 - Future Enhancements
 - [ ] Reviews and ratings system
 - [ ] Favorites and reorder
 - [ ] Push notifications
@@ -317,15 +391,32 @@ MIT License - feel free to use this project for learning or commercial purposes.
 
 ## 🎯 Key Features Implemented
 
+### Phase 1 - Core Features
 ✅ **Google OAuth** - Secure authentication  
-✅ **Real-time Updates** - Socket.io integration  
+✅ **Restaurant Browsing** - Search and filter restaurants  
+✅ **Shopping Cart** - Add, remove, and manage items  
+✅ **Coupon System** - Multiple discount types  
+✅ **Zone Management** - Dynamic delivery costs  
+✅ **Basic Order Flow** - Create and view orders  
+
+### Phase 2 - Advanced Features (NEW)
+✅ **Stripe Payment Integration** - Secure payment processing  
+✅ **Real-time Order Tracking** - Socket.io live updates  
+✅ **Delivery Location Tracking** - Live driver location updates  
+✅ **Restaurant Dashboard** - Complete management interface  
+✅ **Admin Panel** - Platform-wide analytics and management  
+✅ **Menu Management** - CRUD operations for products  
+✅ **User Management** - Role-based access control  
+✅ **Revenue Analytics** - Charts and statistics  
+✅ **Order Status Notifications** - Real-time status updates  
+✅ **Payment Refunds** - Automated refund processing  
+
+### Additional Features
 ✅ **Telegram Bot** - Delivery notifications  
 ✅ **Modern UI** - Uber-inspired design  
 ✅ **Redux State** - Centralized state management  
 ✅ **TypeScript** - Type-safe frontend  
 ✅ **Responsive** - Mobile-first design  
-✅ **Coupon System** - Multiple discount types  
-✅ **Zone Management** - Dynamic delivery costs  
 ✅ **Email Notifications** - Order confirmations  
 
 ## 💡 Tips
