@@ -1,0 +1,71 @@
+{
+  "name": "RapidEats - Delivery Premium",
+  "short_name": "RapidEats",
+  "description": "Plataforma premium de delivery de comida. Pide tu comida favorita y recíbela rápido.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#06C167",
+  "background_color": "#FFFFFF",
+  "orientation": "portrait-primary",
+  "categories": ["food", "shopping"],
+  "icons": [
+    {
+      "src": "/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hacer un pedido",
+      "short_name": "Pedir",
+      "description": "Buscar restaurantes y hacer un pedido",
+      "url": "/restaurants",
+      "icons": [{ "src": "/icons/order.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mis pedidos",
+      "short_name": "Pedidos",
+      "description": "Ver el historial de pedidos",
+      "url": "/orders",
+      "icons": [{ "src": "/icons/orders.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Favoritos",
+      "short_name": "Favoritos",
+      "description": "Ver restaurantes favoritos",
+      "url": "/favorites",
+      "icons": [{ "src": "/icons/heart.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    },
+    {
+      "src": "/screenshots/restaurant.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    }
+  ],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}
