@@ -2,8 +2,9 @@
  * Lista virtualizada para performance con muchos items
  */
 
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { List } from 'react-window';
 import { useRef } from 'react';
+import type { RowComponentProps, ListImperativeAPI } from 'react-window';
 
 interface VirtualizedListProps<T> {
   items: T[];
@@ -22,9 +23,9 @@ export function VirtualizedList<T>({
   className = '',
   onScrollEnd
 }: VirtualizedListProps<T>) {
-  const listRef = useRef<FixedSizeList>(null);
+  const listRef = useRef<ListImperativeAPI>(null);
 
-  const Row = ({ index, style }: ListChildComponentProps) => (
+  const Row = ({ index, style }: RowComponentProps) => (
     <div style={style}>
       {renderItem(items[index], index)}
     </div>
@@ -41,16 +42,16 @@ export function VirtualizedList<T>({
   };
 
   return (
-    <FixedSizeList
-      ref={listRef}
+    <List
+      listRef={listRef}
       className={className}
-      height={containerHeight}
-      itemCount={items.length}
-      itemSize={itemHeight}
-      width="100%"
+      defaultHeight={containerHeight}
+      rowCount={items.length}
+      rowHeight={itemHeight}
+      rowComponent={Row}
+      rowProps={{}}
+      style={{ width: '100%' }}
       onScroll={handleScroll}
-    >
-      {Row}
-    </FixedSizeList>
+    />
   );
 }
