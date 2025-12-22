@@ -55,10 +55,7 @@ export const useNotifications = () => {
         if (notification) {
           // Show toast notification
           toast.info(
-            <div>
-              <strong>{notification.title}</strong>
-              <p className="text-sm mt-1">{notification.body}</p>
-            </div>,
+            `${notification.title}: ${notification.body}`,
             {
               autoClose: 5000,
               onClick: () => {

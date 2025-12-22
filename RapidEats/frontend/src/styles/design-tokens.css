@@ -1,0 +1,271 @@
+/**
+ * RapidEats Premium Design Tokens
+ * Sistema de diseño minimalista inspirado en Uber Eats/DoorDash
+ */
+
+:root {
+  /* ========================================
+     COLORES PRIMARIOS
+     ======================================== */
+  --rapid-black: #000000;
+  --rapid-white: #FFFFFF;
+  --rapid-green: #06C167;
+  --rapid-green-hover: #05AB5A;
+  --rapid-green-active: #04954D;
+  --rapid-green-disabled: #84E0B0;
+  --rapid-red: #FF3B30;
+  --rapid-red-hover: #E6352A;
+  --rapid-red-active: #CC2F24;
+
+  /* ========================================
+     COLORES NEUTROS (Escala de Grises)
+     ======================================== */
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+
+  /* ========================================
+     COLORES SEMÁNTICOS
+     ======================================== */
+  --success: #10B981;
+  --success-light: #D1FAE5;
+  --success-dark: #065F46;
+  
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+  --warning-dark: #92400E;
+  
+  --error: #EF4444;
+  --error-light: #FEE2E2;
+  --error-dark: #991B1B;
+  
+  --info: #3B82F6;
+  --info-light: #DBEAFE;
+  --info-dark: #1E3A8A;
+
+  /* ========================================
+     TIPOGRAFÍA
+     Escala modular basada en 1.25 (Major Third)
+     ======================================== */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  --font-family-display: 'SF Pro Display', var(--font-family-base);
+  --font-family-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Courier New', monospace;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 2rem;        /* 32px */
+  --text-4xl: 3rem;        /* 48px */
+  --text-5xl: 4rem;        /* 64px */
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* ========================================
+     ESPACIADO
+     Escala 4pt para consistencia perfecta
+     ======================================== */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* ========================================
+     SOMBRAS (Box Shadows)
+     4 niveles de elevación
+     ======================================== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Sombras de color (para elementos con color) */
+  --shadow-green: 0 10px 15px -3px rgba(6, 193, 103, 0.3);
+  --shadow-red: 0 10px 15px -3px rgba(255, 59, 48, 0.3);
+
+  /* ========================================
+     RADIOS DE BORDE
+     ======================================== */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-base: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;    /* 12px */
+  --radius-lg: 1rem;       /* 16px */
+  --radius-xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;   /* Circular */
+
+  /* ========================================
+     Z-INDEX
+     Sistema consistente para capas
+     ======================================== */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+  --z-toast: 80;
+
+  /* ========================================
+     TRANSICIONES
+     ======================================== */
+  --transition-fast: 150ms;
+  --transition-base: 250ms;
+  --transition-slow: 350ms;
+  --transition-slower: 500ms;
+
+  /* Easing Functions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Transiciones completas predefinidas */
+  --transition-colors: color var(--transition-base) var(--ease-in-out),
+                       background-color var(--transition-base) var(--ease-in-out),
+                       border-color var(--transition-base) var(--ease-in-out);
+  --transition-transform: transform var(--transition-base) var(--ease-out);
+  --transition-all: all var(--transition-base) var(--ease-in-out);
+
+  /* ========================================
+     BREAKPOINTS (para uso con @media)
+     ======================================== */
+  --breakpoint-mobile: 0px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+
+  /* ========================================
+     LAYOUT
+     ======================================== */
+  --container-max-width: 1280px;
+  --container-padding-mobile: var(--space-6);  /* 24px */
+  --container-padding-desktop: var(--space-12); /* 48px */
+
+  --header-height: 64px;
+  --footer-height: 320px;
+
+  /* ========================================
+     OPACIDAD
+     ======================================== */
+  --opacity-disabled: 0.5;
+  --opacity-hover: 0.8;
+  --opacity-overlay: 0.6;
+
+  /* ========================================
+     BACKDROP BLUR
+     ======================================== */
+  --blur-sm: 4px;
+  --blur-base: 8px;
+  --blur-md: 12px;
+  --blur-lg: 16px;
+  --blur-xl: 24px;
+}
+
+/* ========================================
+   DARK MODE (preparado para futuro)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Invertir colores neutros en dark mode */
+    --rapid-black: #FFFFFF;
+    --rapid-white: #000000;
+    
+    --gray-50: #111827;
+    --gray-100: #1F2937;
+    --gray-200: #374151;
+    --gray-300: #4B5563;
+    --gray-400: #6B7280;
+    --gray-500: #9CA3AF;
+    --gray-600: #D1D5DB;
+    --gray-700: #E5E7EB;
+    --gray-800: #F3F4F6;
+    --gray-900: #F9FAFB;
+  }
+}
+
+/* ========================================
+   UTILIDADES BASE
+   ======================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-normal);
+  color: var(--gray-900);
+  background-color: var(--rapid-white);
+}
+
+/* ========================================
+   FOCUS STATES ACCESIBLES
+   ======================================== */
+*:focus-visible {
+  outline: 2px solid var(--rapid-green);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--rapid-green);
+  outline-offset: 2px;
+}
